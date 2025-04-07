@@ -1,0 +1,23 @@
+# Utiliser une image de base Go
+FROM golang:1.21 AS builder
+
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
+
+# Copier les fichiers go.mod et go.sum
+COPY go.mod go.sum ./
+
+# Télécharger les dépendances Go
+RUN go mod download
+
+# Copier le reste des fichiers source
+COPY . .
+
+# Compiler l'application
+RUN go build -o main
+
+# Créer une image minimale pour l'exécution
+FROM alpine:latest
+
+# Définir le répertoire de travail
+WORKDIR /app
